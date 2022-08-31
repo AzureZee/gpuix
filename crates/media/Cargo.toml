@@ -1,0 +1,13 @@
+[package]
+name = "media"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+path = "src/media.rs"
+doctest = false
+
+[dependencies]
+block = "0.1"
+core-foundation = "0.9.3"
+objc = "0.2"
