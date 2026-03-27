@@ -1108,6 +1108,17 @@ impl App {
     }
 
     /// Hide the application at the platform level.
+    ///
+    /// This function will hide all visible windows and track them so they can be
+    /// restored later via the `activate` method.
+    ///
+    /// # Platform-specific behavior
+    /// On Windows, if the application is not registered with the `system tray`,
+    /// using `hide` will make the application disappear from taskbar,
+    /// and you can be terminated through the `Task Manager`.
+    /// So it's recommended to
+    /// use it in conjunction with a crate like [tray-icon](https://crates.io/crates/tray-icon)
+    /// to provide a way for users to restore the application.
     pub fn hide(&self) {
         self.platform.hide();
     }
