@@ -320,9 +320,6 @@ debug = true
 # proc-macros start
 gpui_macros = { opt-level = 3 }
 derive_refineable = { opt-level = 3 }
-settings_macros = { opt-level = 3 }
-sqlez_macros = { opt-level = 3, codegen-units = 1 }
-ui_macros = { opt-level = 3 }
 util_macros = { opt-level = 3 }
 quote = { opt-level = 3 }
 syn = { opt-level = 3 }
@@ -331,50 +328,15 @@ proc-macro2 = { opt-level = 3 }
 
 taffy = { opt-level = 3 }
 resvg = { opt-level = 3 }
-wasmtime = { opt-level = 3 }
 # Build single-source-file crates with cg=1 as it helps make `cargo build` of a whole workspace a bit faster
-activity_indicator = { codegen-units = 1 }
-assets = { codegen-units = 1 }
-breadcrumbs = { codegen-units = 1 }
 collections = { codegen-units = 1 }
-command_palette = { codegen-units = 1 }
-command_palette_hooks = { codegen-units = 1 }
-feature_flags = { codegen-units = 1 }
-file_icons = { codegen-units = 1 }
-image_viewer = { codegen-units = 1 }
-edit_prediction_ui = { codegen-units = 1 }
-install_cli = { codegen-units = 1 }
-journal = { codegen-units = 1 }
-json_schema_store = { codegen-units = 1 }
-lmstudio = { codegen-units = 1 }
-menu = { codegen-units = 1 }
-notifications = { codegen-units = 1 }
-ollama = { codegen-units = 1 }
-outline = { codegen-units = 1 }
-paths = { codegen-units = 1 }
-prettier = { codegen-units = 1 }
-project_symbols = { codegen-units = 1 }
 refineable = { codegen-units = 1 }
-release_channel = { codegen-units = 1 }
 reqwest_client = { codegen-units = 1 }
-session = { codegen-units = 1 }
-sidebar = { codegen-units = 1 }
-snippet = { codegen-units = 1 }
-snippets_ui = { codegen-units = 1 }
-story = { codegen-units = 1 }
-telemetry_events = { codegen-units = 1 }
-theme_selector = { codegen-units = 1 }
-time_format = { codegen-units = 1 }
-ui_input = { codegen-units = 1 }
-zed_actions = { codegen-units = 1 }
 
 [profile.release]
 debug = "limited"
 lto = "thin"
 codegen-units = 1
-
-[profile.release.package]
-zed = { codegen-units = 16 }
 
 [profile.release-fast]
 inherits = "release"
