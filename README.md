@@ -1,4 +1,4 @@
-# gpui - Community Edition
+# GPUIX
 
 A community fork of [GPUI](https://gpui.rs), Zed's GPU-accelerated UI framework.
 
@@ -6,11 +6,11 @@ A community fork of [GPUI](https://gpui.rs), Zed's GPU-accelerated UI framework.
 
 ```toml
 [dependencies]
-gpui = { package = "gpui-ce", version = "0.3" }
+gpui = { git = "https://github.com/AzureZee/gpuix.git",branch = "main" }
 
 # for test support...
 [dev-dependencies]
-gpui = { package = "gpui-ce", version = "0.3", features = ["test-support"] }
+gpui = { git = "https://github.com/AzureZee/gpuix.git",branch = "main", features = ["test-support"] }
 ```
 
 Then use `gpui::{import}` as normal.
