@@ -736,8 +736,11 @@ impl PlatformWindow for WindowsWindow {
                 this.set_window_placement().log_err();
 
                 unsafe {
+                    if !IsWindowVisible(hwnd).as_bool() {
+                        ShowWindowAsync(hwnd, SW_SHOW).ok().log_err();
+                    }
                     // If the window is minimized, restore it.
-                    if IsIconic(hwnd).as_bool() {
+                    else if IsIconic(hwnd).as_bool() {
                         ShowWindowAsync(hwnd, SW_RESTORE).ok().log_err();
                     }
 
@@ -779,6 +782,15 @@ impl PlatformWindow for WindowsWindow {
                 unsafe { SetForegroundWindow(hwnd).as_bool() };
             })
             .detach();
+    }
+
+    fn hide(&self) {
+        let hwnd = self.0.hwnd;
+        self.0
+            .executor
+            .spawn(async move {
+                unsafe { ShowWindow(hwnd, SW_HIDE).ok().log_err() }
+            }).detach();
     }
 
     fn is_active(&self) -> bool {

@@ -25,7 +25,7 @@ fn button(text: &str, on_click: impl Fn(&mut Window, &mut App) + 'static) -> imp
         .child(text.to_string())
         .on_click(move |_, window, cx| on_click(window, cx))
 }
-
+#[cfg(not(target_os = "windows"))]
 impl Render for SubWindow {
     fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
         let window_bounds =
@@ -83,6 +83,82 @@ impl Render for SubWindow {
                     })
                     .child(button("Close", |window, _| {
                         window.remove_window();
+                    })),
+            )
+    }
+}
+
+#[cfg(target_os = "windows")]
+impl Render for SubWindow {
+    fn render(&mut self, _window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+        let window_bounds =
+            WindowBounds::Windowed(Bounds::centered(None, size(px(250.0), px(200.0)), cx));
+
+        div()
+            .flex()
+            .flex_col()
+            .bg(rgb(0xffffff))
+            .size_full()
+            .gap_2()
+            .when(self.custom_titlebar, |cx| {
+                cx.child(
+                    div()
+                        .flex()
+                        .h(px(32.))
+                        .px_4()
+                        .bg(gpui::blue())
+                        .text_color(gpui::white())
+                        .w_full()
+                        .child(
+                            div()
+                                .flex()
+                                .items_center()
+                                .justify_center()
+                                .size_full()
+                                .child("Custom Titlebar"),
+                        ),
+                )
+            })
+            .child(
+                div()
+                    .p_8()
+                    .flex()
+                    .flex_col()
+                    .gap_2()
+                    .child("SubWindow")
+                    .when(self.is_dialog, |div| {
+                        div.child(button("Open Nested Dialog", move |_, cx| {
+                            cx.open_window(
+                                WindowOptions {
+                                    window_bounds: Some(window_bounds),
+                                    kind: WindowKind::Dialog,
+                                    ..Default::default()
+                                },
+                                |_, cx| {
+                                    cx.new(|_| SubWindow {
+                                        custom_titlebar: false,
+                                        is_dialog: true,
+                                    })
+                                },
+                            )
+                                .unwrap();
+                        }))
+                    })
+                    .child(button("Close", |window, _| {
+                        window.remove_window();
+                    }))
+                    .child(button("Hide", |window, cx| {
+                        window.hide_window();
+                        // Restore the window after 2 seconds
+                        window.spawn(cx, async move |cx| {
+                            cx.background_executor()
+                                .timer(std::time::Duration::from_secs(2))
+                                .await;
+                            cx.update(|window: &mut Window, _| {
+                                println!("activate");
+                                window.activate_window();
+                            })
+                        }).detach();
                     })),
             )
     }
@@ -191,13 +267,23 @@ impl Render for WindowDemo {
                         ..Default::default()
                     },
                     |_, cx| {
+                        println!("Invisible window");
                         cx.new(|_| SubWindow {
                             custom_titlebar: false,
                             is_dialog: false,
                         })
                     },
-                )
-                .unwrap();
+                ).unwrap().update(cx, |_, window, cx| {
+                    window.spawn(cx, async move |cx| {
+                        cx.background_executor()
+                            .timer(std::time::Duration::from_secs(2))
+                            .await;
+                        cx.update(|window: &mut Window, _| {
+                            println!("activate invisible window");
+                            window.activate_window();
+                        })
+                    }).detach();
+                }).unwrap();
             }))
             .child(button("Unmovable", move |_, cx| {
                 cx.open_window(
@@ -332,7 +418,10 @@ fn run_example() {
 
         cx.activate(true);
         cx.on_action(|_: &Quit, cx| cx.quit());
+        #[cfg(not(target_os = "windows"))]
         cx.bind_keys([KeyBinding::new("cmd-q", Quit, None)]);
+        #[cfg(target_os = "windows")]
+        cx.bind_keys([KeyBinding::new("ctrl-q", Quit, None)]);
     });
 }
 

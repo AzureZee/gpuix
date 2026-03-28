@@ -202,6 +202,11 @@ impl PlatformWindow for TestWindow {
             .set_active_window(Some(self.clone()))
     }
 
+    #[cfg(target_os = "windows")]
+    fn hide(&self) {
+        unimplemented!()
+    }
+
     fn is_active(&self) -> bool {
         false
     }

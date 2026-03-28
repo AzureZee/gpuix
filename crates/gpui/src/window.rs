@@ -4696,6 +4696,12 @@ impl Window {
         self.platform_window.activate();
     }
 
+    #[cfg(target_os = "windows")]
+    /// Hide the current window at the platform level.
+    pub fn hide_window(&self) {
+        self.platform_window.hide();
+    }
+
     /// Minimize the current window at the platform level.
     pub fn minimize_window(&self) {
         self.platform_window.minimize();
