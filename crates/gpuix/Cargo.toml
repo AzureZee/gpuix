@@ -4,7 +4,7 @@ version = "0.1.0"
 edition.workspace = true
 publish.workspace = true
 license = "Apache-2.0"
-description = "GPUI umbrella crate - unified entry point for GPUI framework and platform abstractions"
+description = "GPUI community fork - unified entry point for GPUI framework and platform abstractions"
 
 [features]
 default = ["font-kit", "wayland", "x11", "windows-manifest"]
