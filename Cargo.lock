@@ -2507,6 +2507,7 @@ dependencies = [
  "gpui_platform",
  "gpui_util",
  "gpui_web",
+ "gpuix",
  "http_client",
  "image",
  "inventory",
@@ -2764,6 +2765,14 @@ dependencies = [
  "windows-numerics 0.2.0",
  "windows-registry 0.5.3",
  "zed-scap",
+]
+
+[[package]]
+name = "gpuix"
+version = "0.1.0"
+dependencies = [
+ "gpui",
+ "gpui_platform",
 ]
 
 [[package]]

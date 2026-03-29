@@ -6,11 +6,11 @@ A community fork of [GPUI](https://gpui.rs), Zed's GPU-accelerated UI framework.
 
 ```toml
 [dependencies]
-gpui = { git = "https://github.com/AzureZee/gpuix.git",branch = "main" }
+gpui = { git = "https://github.com/AzureZee/gpuix.git", package = "gpuix", branch = "main" }
 
 # for test support...
 [dev-dependencies]
-gpui = { git = "https://github.com/AzureZee/gpuix.git",branch = "main", features = ["test-support"] }
+gpui = { git = "https://github.com/AzureZee/gpuix.git", package = "gpuix", branch = "main", features = ["test-support"] }
 ```
 
 Then use `gpui::{import}` as normal.
