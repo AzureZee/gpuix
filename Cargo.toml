@@ -4,6 +4,7 @@ members = [
     "crates/collections",
     "crates/gpui",
     "crates/gpui_linux",
+    "crates/gpuix",
     "crates/gpui_macos",
     "crates/gpui_macros",
     "crates/gpui_platform",
@@ -34,7 +35,7 @@ members = [
     "tooling/perf",
     "tooling/xtask",
 ]
-default-members = ["crates/gpui"]
+default-members = ["crates/gpui", "crates/gpuix"]
 
 [workspace.package]
 publish = false
@@ -57,6 +58,7 @@ gpui_platform = { path = "crates/gpui_platform", default-features = false }
 gpui_web = { path = "crates/gpui_web" }
 gpui_wgpu = { path = "crates/gpui_wgpu" }
 gpui_windows = { path = "crates/gpui_windows", default-features = false }
+gpuix = { path = "crates/gpuix" }
 gpui_tokio = { path = "crates/gpui_tokio" }
 gpui_util = { path = "crates/gpui_util" }
 http_client = { path = "crates/http_client" }

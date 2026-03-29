@@ -1,10 +1,9 @@
 #![cfg_attr(target_family = "wasm", no_main)]
 
-use gpui::{
-    App, Bounds, Context, SharedString, Window, WindowBounds, WindowOptions, div, prelude::*, px,
-    rgb, size,
+use gpuix::{
+    App, Bounds, Context, SharedString, Window, WindowBounds, WindowOptions, application, div,
+    prelude::*, px, rgb, size,
 };
-use gpui_platform::application;
 
 struct HelloWorld {
     text: SharedString,
@@ -116,6 +115,6 @@ fn main() {
 #[cfg(target_family = "wasm")]
 #[wasm_bindgen::prelude::wasm_bindgen(start)]
 pub fn start() {
-    gpui_platform::web_init();
+    gpuix::web_init();
     run_example();
 }
