@@ -141,24 +141,31 @@ impl Render for SubWindow {
                                     })
                                 },
                             )
-                                .unwrap();
+                            .unwrap();
                         }))
                     })
                     .child(button("Close", |window, _| {
                         window.remove_window();
                     }))
+                    .child(button("Pin", |window, _| {
+                        window.toggle_pin_to_top();
+                        let is_pinned = window.is_pinned();
+                        println!("\npinned: {is_pinned}");
+                    }))
                     .child(button("Hide", |window, cx| {
                         window.hide_window();
                         // Restore the window after 2 seconds
-                        window.spawn(cx, async move |cx| {
-                            cx.background_executor()
-                                .timer(std::time::Duration::from_secs(2))
-                                .await;
-                            cx.update(|window: &mut Window, _| {
-                                println!("activate");
-                                window.activate_window();
+                        window
+                            .spawn(cx, async move |cx| {
+                                cx.background_executor()
+                                    .timer(std::time::Duration::from_secs(2))
+                                    .await;
+                                cx.update(|window: &mut Window, _| {
+                                    println!("\nactivate");
+                                    window.activate_window();
+                                })
                             })
-                        }).detach();
+                            .detach();
                     })),
             )
     }
@@ -267,23 +274,28 @@ impl Render for WindowDemo {
                         ..Default::default()
                     },
                     |_, cx| {
-                        println!("Invisible window");
+                        println!("\nInvisible window");
                         cx.new(|_| SubWindow {
                             custom_titlebar: false,
                             is_dialog: false,
                         })
                     },
-                ).unwrap().update(cx, |_, window, cx| {
-                    window.spawn(cx, async move |cx| {
-                        cx.background_executor()
-                            .timer(std::time::Duration::from_secs(2))
-                            .await;
-                        cx.update(|window: &mut Window, _| {
-                            println!("activate invisible window");
-                            window.activate_window();
+                )
+                .unwrap()
+                .update(cx, |_, window, cx| {
+                    window
+                        .spawn(cx, async move |cx| {
+                            cx.background_executor()
+                                .timer(std::time::Duration::from_secs(2))
+                                .await;
+                            cx.update(|window: &mut Window, _| {
+                                println!("\nactivate invisible window");
+                                window.activate_window();
+                            })
                         })
-                    }).detach();
-                }).unwrap();
+                        .detach();
+                })
+                .unwrap();
             }))
             .child(button("Unmovable", move |_, cx| {
                 cx.open_window(
@@ -364,9 +376,9 @@ impl Render for WindowDemo {
 
                 cx.spawn(async move |_| {
                     if answer.await.unwrap() == 0 {
-                        println!("You have clicked Ok");
+                        println!("\nYou have clicked Ok");
                     } else {
-                        println!("You have clicked Cancel");
+                        println!("\nYou have clicked Cancel");
                     }
                 })
                 .detach();
@@ -382,9 +394,9 @@ impl Render for WindowDemo {
 
                 cx.spawn(async move |_| {
                     if answer.await.unwrap() == 0 {
-                        println!("You have clicked Ok");
+                        println!("\nYou have clicked Ok");
                     } else {
-                        println!("You have clicked Cancel");
+                        println!("\nYou have clicked Cancel");
                     }
                 })
                 .detach();
@@ -405,8 +417,15 @@ fn run_example() {
             },
             |window, cx| {
                 cx.new(|cx| {
+                    use std::io::{self, Write};
+                    let mut old = bounds;
                     cx.observe_window_bounds(window, move |_, window, _| {
-                        println!("Window bounds changed: {:?}", window.bounds());
+                        let new = window.bounds();
+                        if new != old {
+                            old = new;
+                            print!("\rWindow bounds changed: {:?}     ", new);
+                            io::stdout().flush().unwrap();
+                        }
                     })
                     .detach();
 
@@ -418,10 +437,10 @@ fn run_example() {
 
         cx.activate(true);
         cx.on_action(|_: &Quit, cx| cx.quit());
-        #[cfg(not(target_os = "windows"))]
-        cx.bind_keys([KeyBinding::new("cmd-q", Quit, None)]);
-        #[cfg(target_os = "windows")]
+        #[cfg(not(target_os = "macos"))]
         cx.bind_keys([KeyBinding::new("ctrl-q", Quit, None)]);
+        #[cfg(target_os = "macos")]
+        cx.bind_keys([KeyBinding::new("cmd-q", Quit, None)]);
     });
 }
 
