@@ -331,6 +331,16 @@ impl PlatformWindow for TestWindow {
     fn gpu_specs(&self) -> Option<GpuSpecs> {
         None
     }
+
+    #[cfg(target_os = "windows")]
+    fn toggle_pin_to_top(&self) {
+        unimplemented!();
+    }
+
+    #[cfg(target_os = "windows")]
+    fn is_pinned(&self) -> bool {
+        false
+    }
 }
 
 pub(crate) struct TestAtlasState {

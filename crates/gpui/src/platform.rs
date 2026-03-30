@@ -617,6 +617,10 @@ pub trait PlatformWindow: HasWindowHandle + HasDisplayHandle {
     fn activate(&self);
     #[cfg(target_os = "windows")]
     fn hide(&self);
+    #[cfg(target_os = "windows")]
+    fn toggle_pin_to_top(&self);
+    #[cfg(target_os = "windows")]
+    fn is_pinned(&self) -> bool;
     fn is_active(&self) -> bool;
     fn is_hovered(&self) -> bool;
     fn background_appearance(&self) -> WindowBackgroundAppearance;

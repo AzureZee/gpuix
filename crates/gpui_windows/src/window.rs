@@ -794,11 +794,34 @@ impl PlatformWindow for WindowsWindow {
         let hwnd = self.0.hwnd;
         self.0
             .executor
-            .spawn(async move {
-                unsafe { ShowWindow(hwnd, SW_HIDE).ok().log_err() }
-            }).detach();
+            .spawn(async move { unsafe { ShowWindow(hwnd, SW_HIDE).ok().log_err() } })
+            .detach();
     }
 
+    fn toggle_pin_to_top(&self) {
+        let hwnd_insert_after = if self.is_pinned() {
+            HWND_NOTOPMOST
+        } else {
+            HWND_TOPMOST
+        };
+        unsafe {
+            SetWindowPos(
+                self.0.hwnd,
+                Some(hwnd_insert_after),
+                0,
+                0,
+                0,
+                0,
+                SWP_NOMOVE | SWP_NOSIZE,
+            )
+        }
+        .log_err();
+    }
+
+    fn is_pinned(&self) -> bool {
+        (unsafe { GetWindowLongPtrW(self.0.hwnd, GWL_EXSTYLE) as u32 } & WS_EX_TOPMOST.0 != 0) 
+    }
+    
     fn is_active(&self) -> bool {
         self.0.hwnd == unsafe { GetActiveWindow() }
     }

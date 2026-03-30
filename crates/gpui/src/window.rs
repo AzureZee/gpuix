@@ -4700,7 +4700,19 @@ impl Window {
     pub fn hide_window(&self) {
         self.platform_window.hide();
     }
-
+    
+    #[cfg(target_os = "windows")]
+    /// Toggles the pin-to-top state of the current window at the platform level.
+    pub fn toggle_pin_to_top(&self) {
+        self.platform_window.toggle_pin_to_top();
+    }
+    
+    #[cfg(target_os = "windows")]
+    /// Returns `true` if the window is now pinned, `false` if unpinned.
+    pub fn is_pinned(&self) -> bool {
+       self.platform_window.is_pinned() 
+    }
+    
     /// Minimize the current window at the platform level.
     pub fn minimize_window(&self) {
         self.platform_window.minimize();
