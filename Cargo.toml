@@ -3,8 +3,8 @@ resolver = "2"
 members = [
     "crates/collections",
     "crates/gpui",
-    "crates/gpui_linux",
     "crates/gpuix",
+    "crates/gpui_linux",
     "crates/gpui_macos",
     "crates/gpui_macros",
     "crates/gpui_platform",
@@ -23,7 +23,6 @@ members = [
     "crates/sum_tree",
     "crates/util",
     "crates/util_macros",
-
     "crates/zlog",
     "crates/ztracing",
     "crates/ztracing_macro",
@@ -35,7 +34,7 @@ members = [
     "tooling/perf",
     "tooling/xtask",
 ]
-default-members = ["crates/gpui", "crates/gpuix"]
+default-members = ["crates/gpui"]
 
 [workspace.package]
 publish = false
@@ -71,10 +70,10 @@ scheduler = { path = "crates/scheduler" }
 sum_tree = { path = "crates/sum_tree" }
 util = { path = "crates/util" }
 util_macros = { path = "crates/util_macros" }
-
 zlog = { path = "crates/zlog" }
 ztracing = { path = "crates/ztracing" }
 ztracing_macro = { path = "crates/ztracing_macro" }
+
 #
 # External crates
 #
