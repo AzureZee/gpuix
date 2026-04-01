@@ -142,6 +142,7 @@ metal = "0.33"
 naga = { version = "29.0", features = ["wgsl-in"] }
 nix = "0.29"
 objc = "0.2"
+objc2-app-kit = { version = "0.3", default-features = false, features = [ "NSGraphics" ] }
 objc2-foundation = { version = "=0.3.2", default-features = false, features = [
     "NSArray",
     "NSAttributedString",
@@ -275,6 +276,7 @@ features = [
     "Win32_System_Com",
     "Win32_System_Com_StructuredStorage",
     "Win32_System_Console",
+    "Win32_System_Diagnostics_Debug",
     "Win32_System_DataExchange",
     "Win32_System_IO",
     "Win32_System_LibraryLoader",
