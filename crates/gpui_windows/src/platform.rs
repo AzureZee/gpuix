@@ -33,8 +33,6 @@ use gpui::*;
 pub struct WindowsPlatform {
     inner: Rc<WindowsPlatformInner>,
     raw_window_handles: Arc<RwLock<SmallVec<[SafeHwnd; 4]>>>,
-    // The window handles that are hided by `hide` method.
-    hidden_windows: RwLock<SmallVec<[SafeHwnd; 4]>>,
     // The below members will never change throughout the entire lifecycle of the app.
     headless: bool,
     icon: HICON,
@@ -186,7 +184,6 @@ impl WindowsPlatform {
             inner,
             handle,
             raw_window_handles,
-            hidden_windows: RwLock::new(SmallVec::new()),
             headless,
             icon,
             background_executor,
@@ -470,24 +467,20 @@ impl Platform for WindowsPlatform {
     }
 
     fn activate(&self, _ignoring_other_apps: bool) {
-        let mut state = self.hidden_windows.write();
-        state.iter().for_each(|handle| unsafe {
-            ShowWindow(handle.as_raw(), SW_SHOW).ok().log_err();
-        });
-        state.clear();
-    }
-
-    fn hide(&self) {
-        let mut state = self.hidden_windows.write();
         self.raw_window_handles
             .read()
             .iter()
             .for_each(|handle| unsafe {
-                let hwnd = handle.as_raw();
-                if IsWindowVisible(hwnd).as_bool() {
-                    state.push(*handle);
-                    ShowWindow(hwnd, SW_HIDE).ok().log_err();
-                }
+                ShowWindow(handle.as_raw(), SW_SHOW).ok().log_err();
+            });
+    }
+
+    fn hide(&self) {
+        self.raw_window_handles
+            .read()
+            .iter()
+            .for_each(|handle| unsafe {
+                ShowWindow(handle.as_raw(), SW_HIDE).ok().log_err();
             });
     }
 

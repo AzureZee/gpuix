@@ -154,14 +154,12 @@ impl Render for SubWindow {
                     }))
                     .child(button("Hide", |window, cx| {
                         window.hide_window();
-                        // Restore the window after 2 seconds
                         window
                             .spawn(cx, async move |cx| {
                                 cx.background_executor()
                                     .timer(std::time::Duration::from_secs(2))
                                     .await;
                                 cx.update(|window: &mut Window, _| {
-                                    println!("\nactivate");
                                     window.activate_window();
                                 })
                             })
@@ -289,7 +287,6 @@ impl Render for WindowDemo {
                                 .timer(std::time::Duration::from_secs(2))
                                 .await;
                             cx.update(|window: &mut Window, _| {
-                                println!("\nactivate invisible window");
                                 window.activate_window();
                             })
                         })
@@ -410,30 +407,39 @@ fn run_example() {
     application().run(|cx: &mut App| {
         let bounds = Bounds::centered(None, size(px(800.0), px(600.0)), cx);
 
-        cx.open_window(
-            WindowOptions {
-                window_bounds: Some(WindowBounds::Windowed(bounds)),
-                ..Default::default()
-            },
-            |window, cx| {
-                cx.new(|cx| {
-                    use std::io::{self, Write};
-                    let mut old = bounds;
-                    cx.observe_window_bounds(window, move |_, window, _| {
-                        let new = window.bounds();
-                        if new != old {
-                            old = new;
-                            print!("\rWindow bounds changed: {:?}     ", new);
-                            io::stdout().flush().unwrap();
-                        }
-                    })
-                    .detach();
+        let main_id = cx
+            .open_window(
+                WindowOptions {
+                    window_bounds: Some(WindowBounds::Windowed(bounds)),
+                    ..Default::default()
+                },
+                |window, cx| {
+                    cx.new(|cx| {
+                        use std::io::{self, Write};
+                        let mut old = bounds;
+                        cx.observe_window_bounds(window, move |_, window, _| {
+                            let new = window.bounds();
+                            if new != old {
+                                old = new;
+                                print!("\rWindow bounds changed: {:?}  ", new);
+                                io::stdout().flush().unwrap();
+                            }
+                        })
+                        .detach();
 
-                    WindowDemo {}
-                })
-            },
-        )
-        .unwrap();
+                        WindowDemo {}
+                    })
+                },
+            )
+            .unwrap()
+            .window_id();
+
+        cx.on_window_closed(move |cx: &mut App, wnd_id| {
+            if main_id == wnd_id {
+                cx.quit();
+            }
+        })
+        .detach();
 
         cx.activate(true);
         cx.on_action(|_: &Quit, cx| cx.quit());

@@ -743,6 +743,7 @@ impl PlatformWindow for WindowsWindow {
                 this.set_window_placement().log_err();
 
                 unsafe {
+                    // If the window is hidden, show it.
                     if !IsWindowVisible(hwnd).as_bool() {
                         ShowWindowAsync(hwnd, SW_SHOW).ok().log_err();
                     }
@@ -792,15 +793,11 @@ impl PlatformWindow for WindowsWindow {
     }
 
     fn hide(&self) {
-        let hwnd = self.0.hwnd;
-        self.0
-            .executor
-            .spawn(async move { unsafe { ShowWindow(hwnd, SW_HIDE).ok().log_err() } })
-            .detach();
+        unsafe { ShowWindowAsync(self.0.hwnd, SW_HIDE).ok().log_err() };
     }
 
     fn toggle_pin_to_top(&self) {
-        let hwnd_insert_after = if self.is_pinned() {
+        let z_order = if self.is_pinned() {
             HWND_NOTOPMOST
         } else {
             HWND_TOPMOST
@@ -808,7 +805,7 @@ impl PlatformWindow for WindowsWindow {
         unsafe {
             SetWindowPos(
                 self.0.hwnd,
-                Some(hwnd_insert_after),
+                Some(z_order),
                 0,
                 0,
                 0,
@@ -820,9 +817,9 @@ impl PlatformWindow for WindowsWindow {
     }
 
     fn is_pinned(&self) -> bool {
-        (unsafe { GetWindowLongPtrW(self.0.hwnd, GWL_EXSTYLE) as u32 } & WS_EX_TOPMOST.0 != 0) 
+        (unsafe { GetWindowLongPtrW(self.0.hwnd, GWL_EXSTYLE) as u32 } & WS_EX_TOPMOST.0 != 0)
     }
-    
+
     fn is_active(&self) -> bool {
         self.0.hwnd == unsafe { GetActiveWindow() }
     }
