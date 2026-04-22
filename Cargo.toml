@@ -4,6 +4,7 @@ members = [
     "crates/collections",
     "crates/gpui",
     "crates/gpuix",
+    "crates/gpui_shared_string",
     "crates/gpui_linux",
     "crates/gpui_macos",
     "crates/gpui_macros",
@@ -50,6 +51,7 @@ collections = {path ="crates/collections"}
 crossbeam = "0.8.4"
 derive_refineable = { path = "crates/refineable/derive_refineable" }
 gpui = { path = "crates/gpui", default-features = false }
+gpui_shared_string = { path = "crates/gpui_shared_string" }
 gpui_linux = { path = "crates/gpui_linux", default-features = false }
 gpui_macos = { path = "crates/gpui_macos", default-features = false }
 gpui_macros = { path = "crates/gpui_macros" }
