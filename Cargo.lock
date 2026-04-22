@@ -2485,6 +2485,7 @@ dependencies = [
  "getrandom 0.3.4",
  "gpui_macros",
  "gpui_platform",
+ "gpui_shared_string",
  "gpui_util",
  "gpui_web",
  "gpuix",
@@ -2654,6 +2655,16 @@ dependencies = [
  "gpui_macos",
  "gpui_web",
  "gpui_windows",
+]
+
+[[package]]
+name = "gpui_shared_string"
+version = "0.1.0"
+dependencies = [
+ "derive_more",
+ "gpui_util",
+ "schemars",
+ "serde",
 ]
 
 [[package]]
