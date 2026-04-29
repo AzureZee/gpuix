@@ -142,7 +142,6 @@ libc = "0.2"
 log = { version = "0.4.16", features = ["kv_unstable_serde", "serde"] }
 mach2 = "0.5"
 metal = "0.33"
-naga = { version = "29.0", features = ["wgsl-in"] }
 nix = "0.29"
 objc = "0.2"
 objc2-app-kit = { version = "0.3", default-features = false, features = [ "NSGraphics" ] }
