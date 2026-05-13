@@ -144,12 +144,11 @@ scap = { workspace = true, optional = true }
 [target.'cfg(target_os = "windows")'.dependencies]
 windows = { version = "0.61", features = ["Win32_Foundation"] }
 
-
 [dev-dependencies]
 backtrace.workspace = true
 collections = { workspace = true, features = ["test-support"] }
 env_logger.workspace = true
-gpui_platform = { workspace = true, features = ["font-kit"] }
+gpui_platform = { workspace = true, features = ["font-kit","wayland","x11"] }
 gpui_util = { workspace = true }
 gpuix.workspace = true
 lyon = { version = "1.0", features = ["extra"] }
