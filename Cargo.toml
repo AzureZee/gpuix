@@ -106,6 +106,7 @@ cocoa-foundation = "=0.2.0"
 core-foundation = "=0.10.0"
 core-foundation-sys = "0.8.6"
 core-video = { version = "0.5.2", features = ["metal"] }
+criterion = { version = "0.5", features = ["html_reports"] }
 ctor = "0.4.0"
 crossbeam = "0.8.4"
 dashmap = "6.0"
